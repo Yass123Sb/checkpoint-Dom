@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    ul {
+      list-style-type: none;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    .delete-btn {
+      margin-left: 10px;
+      cursor: pointer;
+      
+    }
+
+    .quantity {
+      margin-left: 10px;
+    }
+
+    #total-chart {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Product List Example</h1>
+  <ul id="productList">
+    <!-- Product items will be added dynamically -->
+  </ul>
+
+  <div id="total-chart">
+    Total: $<span id="totalAmount">0.00</span>
+  </div>
+
+  <script>
+    // Sample initial products
+    var products = [
+      { name: "Product 1", price: 10, quantity: 1 },
+      { name: "Product 2", price: 20, quantity: 1 },
+      { name: "Product 3", price: 30, quantity: 1 }
+    ];
+
+    // Function to render the product items
+    function renderProducts() {
+      var productList = document.getElementById("productList");
+      productList.innerHTML = "";
+
+      for (var i = 0; i < products.length; i++) {
+        var li = document.createElement("li");
+        
+        var productInfo = document.createElement("span");
+        productInfo.textContent = products[i].name + " - $" + products[i].price.toFixed(2);
+
+        var minusBtn = document.createElement("span");
+        minusBtn.textContent = "-";
+        minusBtn.classList.add("quantity");
+        minusBtn.setAttribute("data-index", i);
+        minusBtn.addEventListener("click", decreaseQuantity);
+
+        var quantityInfo = document.createElement("span");
+        quantityInfo.textContent = products[i].quantity;
+        quantityInfo.classList.add("quantity");
+
+        var plusBtn = document.createElement("span");
+        plusBtn.textContent = "+";
+        plusBtn.classList.add("quantity");
+        plusBtn.setAttribute("data-index", i);
+        plusBtn.addEventListener("click", increaseQuantity);
+        
+        var deleteBtn = document.createElement("span");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.classList.add("delete-btn");
+        deleteBtn.setAttribute("data-index", i);
+        deleteBtn.addEventListener("click", deleteProduct);
+        
+        li.appendChild(productInfo);
+        li.appendChild(minusBtn);
+        li.appendChild(quantityInfo);
+        li.appendChild(plusBtn);
+        li.appendChild(deleteBtn);
+        productList.appendChild(li);
+      }
+
+      updateTotal();
+    }
+
+    // Function to add a new product to the list
+   
+
+    // Function to delete a product from the list
+    function deleteProduct() {
+      var index = parseInt(this.getAttribute("data-index"));
+      products.splice(index, 1);
+      renderProducts();
+    }
+
+    // Function to increase the quantity of a product
+    function increaseQuantity() {
+      var index = parseInt(this.getAttribute("data-index"));
+      products[index].quantity++;
+      renderProducts();
+    }
+
+    // Function to decrease the quantity of a product
+    function decreaseQuantity() {
+      var index = parseInt(this.getAttribute("data-index"));
+      if (products[index].quantity > 1) {
+        products[index].quantity--;
+        renderProducts();
+      }
+    }
+
+    // Function to update the total price chart
+    function updateTotal() {
+      var totalAmount = 0;
+
+      for (var i = 0; i < products.length; i++) {
+        totalAmount += products[i].price * products[i].quantity;
+      }
+
+      document.getElementById("totalAmount").textContent = totalAmount.toFixed(2);
+    }
+
+    // Initial rendering of the products
+    renderProducts();
+  </script>
+</body>
+</html>
